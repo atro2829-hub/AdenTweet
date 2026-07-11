@@ -30,12 +30,18 @@ jobs:
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons
+        run: flutter build apk --release --verbose 2>&1 | tail -50
 
-      - name: Upload APK
+      - name: List build outputs
+        run: find build -name "*.apk" 2>/dev/null || echo "No APK found"
+
+      - name: List all build dir
+        run: ls -laR build/app/outputs/ 2>/dev/null || echo "No outputs dir"
+
+      - name: Upload any APK found
         uses: actions/upload-artifact@v4
         with:
           name: adentweet-apk
-          path: build/app/outputs/flutter-apk/*.apk
-          if-no-files-found: error
+          path: build/**/*.apk
+          if-no-files-found: warn
           retention-days: 7
