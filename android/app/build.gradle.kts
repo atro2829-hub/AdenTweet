@@ -7,7 +7,6 @@ plugins {
 android {
     namespace = "com.adentweet.app"
     compileSdk = 35
-    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -29,17 +28,10 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            isShrinkResources = false
         }
     }
 }
 
 flutter {
     source = "../.."
-}
-
-dependencies {
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
 }

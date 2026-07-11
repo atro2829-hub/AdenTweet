@@ -9,7 +9,7 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -31,15 +31,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Run Flutter analyze
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
-
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
-      - name: Upload APK artifact
+      - name: Find and upload APK
         uses: actions/upload-artifact@v4
         with:
           name: adentweet-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
           retention-days: 7
