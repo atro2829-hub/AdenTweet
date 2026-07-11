@@ -3,8 +3,6 @@ name: Build APK
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   build-android:
@@ -31,13 +29,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons
+      - name: Build APK (direct Gradle)
+        run: cd android && chmod +x gradlew && ./gradlew assembleRelease --stacktrace 2>&1
 
-      - name: Find and upload APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: adentweet-apk
-          path: build/app/outputs/flutter-apk/*.apk
-          if-no-files-found: error
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: warn
           retention-days: 7
