@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/utils/supabase_client.dart';
 import '../../../models/tweet_model.dart';
@@ -51,13 +50,13 @@ final tweetFeedProvider = FutureProvider<List<TweetModel>>((ref) async {
 
 /// Provider that creates a new tweet.
 ///
-/// Expects a [Map<String, dynamic>] with keys:
-/// - `content` (String) – the tweet text
-/// - `mediaUrls` (List<String>) – attached media URLs
-/// - `mentions` (List<String>) – mentioned usernames
-/// - `hashtags` (List<String>) – extracted hashtags
+/// Expects a map with keys:
+/// - content (String) - the tweet text
+/// - mediaUrls (List) - attached media URLs
+/// - mentions (List) - mentioned usernames
+/// - hashtags (List) - extracted hashtags
 ///
-/// Returns the newly created tweet's ID.
+/// Returns the newly created tweets ID.
 final createTweetProvider =
     FutureProvider.family<String, Map<String, dynamic>>((ref, data) async {
   final profile = ref.read(currentProfileProvider);
@@ -208,7 +207,7 @@ final singleTweetProvider =
     author:profiles!tweets_user_id_fkey(*)
   ''').eq('id', tweetId).single();
 
-  final tweet = TweetModel.fromJson(response as Map<String, dynamic>);
+  final tweet = TweetModel.fromJson(response);
 
   if (userId != null && userId.isNotEmpty) {
     final results = await Future.wait([

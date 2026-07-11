@@ -48,10 +48,9 @@ class AppAuthState {
 
 /// StateNotifier that manages authentication state.
 class AuthNotifier extends StateNotifier<AppAuthState> {
-  final Ref _ref;
   StreamSubscription? _authSubscription;
 
-  AuthNotifier(this._ref) : super(const AppAuthState()) {
+  AuthNotifier() : super(const AppAuthState()) {
     _initAuth();
   }
 
@@ -132,7 +131,15 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
         password: password,
       );
 
-      await _loadProfile(response.user.id);
+      final userId = response.user.id;
+      if (userId.isEmpty) {
+        state = state.copyWith(
+          status: AuthStatus.unauthenticated,
+          errorMessage: 'فشل تسجيل الدخول',
+        );
+        return;
+      }
+      await _loadProfile(userId);
     } on AuthException catch (e) {
       String message;
       if (e.message.contains('Invalid login')) {
@@ -305,8 +312,8 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
 
 /// Riverpod provider for the auth state notifier.
 final authStateProvider =
-    StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier(ref);
+    StateNotifierProvider<AuthNotifier, AppAuthState>((ref) {
+  return AuthNotifier();
 });
 
 /// Convenience provider that exposes only the current [ProfileModel].

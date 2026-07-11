@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../app/theme/app_theme.dart';
 import '../../../core/utils/supabase_client.dart';
-import '../../../models/profile_model.dart';
 import '../../auth/providers/auth_provider.dart';
 
 /// Screen for editing the current user's profile.

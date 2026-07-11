@@ -55,7 +55,7 @@ final conversationsProvider =
           .limit(1);
 
       MessageModel? lastMessage;
-      if ((lastMessageResponse as List).isNotEmpty) {
+      if (lastMessageResponse.isNotEmpty) {
         lastMessage = MessageModel.fromJson(
             lastMessageResponse[0] as Map<String, dynamic>);
       }

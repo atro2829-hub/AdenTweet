@@ -1,5 +1,3 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../../core/utils/supabase_client.dart';
 
 /// Wraps all tweet interaction operations (like, retweet, bookmark, delete)
