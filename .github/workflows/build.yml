@@ -15,7 +15,7 @@ jobs:
 
       - name: Free disk space
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk/ndk
+          sudo rm -rf /usr/local/lib/android/sdk/ndk /usr/share/dotnet
           sudo apt-get clean
           df -h /
 
@@ -35,13 +35,16 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build via Gradle
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --info 2>&1 | tail -80
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: adentweet-apk
-          path: build/app/outputs/flutter-apk/*.apk
-          if-no-files-found: error
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: warn
           retention-days: 7
