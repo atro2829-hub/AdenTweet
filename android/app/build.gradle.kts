@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.adentweet.app"
     compileSdk = 35
+    ndkVersion = "25.1.8937393"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

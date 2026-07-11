@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../app/theme/app_theme.dart';
 import '../../../core/utils/supabase_client.dart';
@@ -26,8 +23,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _locationController = TextEditingController();
   final _websiteController = TextEditingController();
 
-  File? _avatarFile;
-  File? _coverFile;
+// Image file upload disabled for this build
   String _currentAvatarUrl = '';
   String _currentCoverUrl = '';
   bool _isSaving = false;
@@ -58,38 +54,21 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   }
 
   Future<void> _pickAvatar() async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery, maxWidth: 512);
-    if (image != null) {
-      setState(() => _avatarFile = File(image.path));
-    }
+    // Image picker not available in this build
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('اختيار الصورة غير متاح حالياً')),
+    );
   }
 
   Future<void> _pickCover() async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery, maxWidth: 1200);
-    if (image != null) {
-      setState(() => _coverFile = File(image.path));
-    }
+    // Image picker not available in this build
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('اختيار الصورة غير متاح حالياً')),
+    );
   }
 
-  Future<String?> _uploadImage(File file, String bucket, String path) async {
-    try {
-      // Try to create bucket if not exists
-      try {
-        await supabase.storage.createBucket(bucket);
-      } catch (_) {
-        // Bucket might already exist
-      }
-
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await supabase.storage.from(bucket).upload(fileName, file);
-      final publicUrl =
-          supabase.storage.from(bucket).getPublicUrl(fileName);
-      return publicUrl;
-    } catch (e) {
-      return null;
-    }
+  Future<String?> _uploadImage(String bucket, String path) async {
+    return null; // Image upload not available
   }
 
   Future<void> _saveProfile() async {
@@ -101,19 +80,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       String avatarUrl = _currentAvatarUrl;
       String coverUrl = _currentCoverUrl;
 
-      // Upload avatar if changed
-      if (_avatarFile != null) {
-        final uploaded = await _uploadImage(
-            _avatarFile!, 'avatars', 'avatars');
-        if (uploaded != null) avatarUrl = uploaded;
-      }
-
-      // Upload cover if changed
-      if (_coverFile != null) {
-        final uploaded = await _uploadImage(
-            _coverFile!, 'covers', 'covers');
-        if (uploaded != null) coverUrl = uploaded;
-      }
+      // Image upload disabled in this build
 
       final userId = ref.read(currentUserProvider)?.id;
       if (userId == null) return;
@@ -223,9 +190,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       height: 150,
                       width: double.infinity,
                       color: Colors.grey[900],
-                      child: _coverFile != null
-                          ? Image.file(_coverFile!, fit: BoxFit.cover)
-                          : _currentCoverUrl.isNotEmpty
+                      child: _currentCoverUrl.isNotEmpty
                               ? CachedNetworkImage(
                                   imageUrl: _currentCoverUrl,
                                   fit: BoxFit.cover,
@@ -268,9 +233,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           color: AppTheme.cardSurface,
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: _avatarFile != null
-                            ? Image.file(_avatarFile!, fit: BoxFit.cover)
-                            : _currentAvatarUrl.isNotEmpty
+                        child: _currentAvatarUrl.isNotEmpty
                                 ? CachedNetworkImage(
                                     imageUrl: _currentAvatarUrl,
                                     fit: BoxFit.cover,
