@@ -131,15 +131,15 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
         password: password,
       );
 
-      final userId = response.user.id;
-      if (userId.isEmpty) {
+      final user = response.user;
+      if (user == null || user.id.isEmpty) {
         state = state.copyWith(
           status: AuthStatus.unauthenticated,
           errorMessage: 'فشل تسجيل الدخول',
         );
         return;
       }
-      await _loadProfile(userId);
+      await _loadProfile(user.id);
     } on AuthException catch (e) {
       String message;
       if (e.message.contains('Invalid login')) {

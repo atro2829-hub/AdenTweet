@@ -55,7 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final errorMessage = authState.errorMessage;
 
     // Clear error when user starts typing
-    ref.listen<AuthState>(authStateProvider, (previous, next) {
+    ref.listen<AppAuthState>(authStateProvider, (previous, next) {
       if (next.errorMessage != null && mounted) {
         // Error is displayed, no extra action needed
       }
