@@ -29,19 +29,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK
-        run: flutter build apk --release --verbose 2>&1 | tail -50
+      - name: Build Debug APK
+        run: flutter build apk --debug --target-platform android-arm64
 
-      - name: List build outputs
-        run: find build -name "*.apk" 2>/dev/null || echo "No APK found"
-
-      - name: List all build dir
-        run: ls -laR build/app/outputs/ 2>/dev/null || echo "No outputs dir"
-
-      - name: Upload any APK found
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: adentweet-apk
-          path: build/**/*.apk
-          if-no-files-found: warn
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
           retention-days: 7
